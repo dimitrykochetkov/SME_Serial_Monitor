@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="category3"
+        android:title="@string/port_settings">
+        <ListPreference
+            android:entries="@array/com"
+            android:entryValues="@array/com"
+            android:key="ports"
+            android:title="@string/port">
+        </ListPreference>
+        <ListPreference
+            android:entries="@array/baudratesCOM"
+            android:entryValues="@array/baudratesCOM"
+            android:defaultValue="38400"
+            android:key="comBaudrate"
+            android:title="@string/baudrate">
+        </ListPreference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

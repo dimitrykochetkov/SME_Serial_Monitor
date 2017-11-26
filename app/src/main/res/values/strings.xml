@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">OELMANN SERIAL MONITOR</string>
+    <string name="send">SEND</string>
+    <string name="on">ON  </string>
+    <string name="off">Port OFF  </string>
+    <string name="clear">CLEAR</string>
+    <string name="press_again">Press again to exit application</string>
+    <string name="port_settings">Port settings</string>
+    <string name="port">Serial port</string>
+    <string name="baudrate">Baudrate</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="rs232_on">RS-232: ON</string>
+    <string name="port_is_closed">RS-232: OFF</string>
+    <string name="quit">Quit</string>
+    <string name="attention">Attention!</string>
+    <string name="access_unavailable">Serial port access unavailable</string>
+    <string name="no_ports">no ports</string>
+    <string name="default_port">/dev/ttyMT1</string>
+</resources>

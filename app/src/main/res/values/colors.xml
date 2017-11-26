@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#1976d2</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="colorgrey50">#fafafa</color>
+    <color name="colorred100">#ffcdd2</color>
+    <color name="colorteal100">#B2DFDB</color>
+    <color name="colorblue100">#BBDEFB</color>
+    <color name="colorcyan100">#B2EBF2</color>
+    <color name="colororange100">#FFE0B2</color>
+    <color name="colorindigoaccent100">#8C9EFF</color>
+    <color name="colordeeppurple100">#D1C4E9</color>
+    <color name="colorgrey300">#e0e0e0</color>
+    <color name="colorgrey400">#bdbdbd</color>
+    <color name="colorgrey700">#616161</color>
+    <color name="colorblue400">#42a5f5</color>
+    <color name="colorlightblue100">#e1f5fe</color>
+    <color name="colorlightblue400">#673ab7</color>
+    <color name="colorcyan400">#26c6da</color>
+    <color name="colorteal400">#26a69a</color>
+    <color name="colorred400">#ef5350</color>
+    <color name="colororange400">#FFA726</color>
+    <color name="colorpurple400">#ab47bc</color>
+    <color name="colororange500">#ff9800</color>
+    <color name="colorgreen400">#66bb6a</color>
+    <color name="colorblue500">#2196f3</color>
+    <color name="colordeeppurple500">#673ab7</color>
+    <color name="colorcyan700">#0097a7</color>
+    <color name="colorindigoaccent700">#304ffe</color>
+    <color name="colorblue700">#1976d2</color>
+    <color name="colororange700">#f57c00</color>
+    <color name="y">#33cc99</color>
+</resources>
