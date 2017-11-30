@@ -6,14 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 
 import sme.oelmann.sme_serial_monitor.helpers.PortUtil;
 import sme.oelmann.sme_serial_monitor.helpers.SMEAnimator;
+import sme.oelmann.sme_serial_monitor.helpers.VersionHelper;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private AutoCompleteTextView etBlackOut;
     private Switch swOn;
 
+    public static boolean firstLoad = true;
     private boolean portIsOpened = false;
     private int textSize = 0;
     private long back_pressed;
@@ -54,26 +58,28 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         setContentView(R.layout.activity_main);
 
+        View view = View.inflate(this, R.layout.actionbar, null);
+        TextView tv = view.findViewById(R.id.tvTitle);
+        tv.setText(getString(R.string.app_name));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setCustomView(R.layout.actionbar);
+            view.setLayoutParams(new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        }
+
         // loading last viewed activity
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
 
-        // custom action bar
-        View view = View.inflate(this, R.layout.actionbar, null);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            getSupportActionBar().setCustomView(view);
-        }
-
         // declare interface
-        Button bClear = (Button) findViewById(R.id.bClear);
-        Button bSend = (Button) findViewById(R.id.bSend);
-        etIn = (EditText) findViewById(R.id.etIn);
-        etBlackOut = (AutoCompleteTextView) findViewById(R.id.etBlackOut);
-        swOn = (Switch) findViewById(R.id.swOn);
-        TextView tvVersion = (TextView) findViewById(R.id.tvVersion);
+        Button bClear = findViewById(R.id.bClear);
+        Button bSend = findViewById(R.id.bSend);
+        etIn = findViewById(R.id.etIn);
+        etBlackOut = findViewById(R.id.etBlackOut);
+        swOn = findViewById(R.id.swOn);
+        TextView tvVersion = findViewById(R.id.tvVersion);
 
         // setting on touch listener for some buttons
         bClear.setOnTouchListener(this);
@@ -112,16 +118,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
 
-        String version = "v." + getVersion();
+        String version = "v." + new VersionHelper(this, BuildConfig.BUILD_DATE).getVersion();
         tvVersion.setText(version);
 
         // register receiver for terminal bytes
-        registerReceiver(brHEX, new IntentFilter("HEX"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(brHEX, new IntentFilter("HEX"));
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        firstLoad = false;
         if (PortUtil.openedPort.equals("")){
             swOn.setText(getString(R.string.off));
         } else { swOn.setTextOn(PortUtil.openedPort + " " + getString(R.string.on)); }
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onDestroy();
         if(brHEX != null) {
             try {
-                unregisterReceiver(brHEX);
+                LocalBroadcastManager.getInstance(this).unregisterReceiver(brHEX);
                 brHEX = null;
             } catch (Exception e) { e.getMessage(); }
         }
@@ -268,15 +275,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             } catch (NumberFormatException nfe) { nfe.printStackTrace(); }
         }
         return output.toString();
-    }
-
-    private String getVersion(){
-        PackageInfo pInfo;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            return pInfo.versionName;
-        } catch (PackageManager.NameNotFoundException nnfe){ nnfe.printStackTrace(); }
-        return "";
     }
 
     private void send(){

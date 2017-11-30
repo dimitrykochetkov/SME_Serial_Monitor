@@ -2,6 +2,7 @@ package sme.oelmann.sme_serial_monitor.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,7 +97,7 @@ public class PortUtil {
     private static void sendIntent(String str, String broadcastTag, Context con){
         Intent intent = new Intent(broadcastTag);
         intent.putExtra(broadcastTag, str);
-        con.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(con).sendBroadcast(intent);
     }
 
     private String byteToHEXString(byte[] array) {

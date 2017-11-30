@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">OELMANN SERIAL MONITOR</string>
+    <string name="company_name">Oelmann Elekronik GmbH</string>
+    <string name="start">START</string>
     <string name="send">SEND</string>
     <string name="on">ON  </string>
     <string name="off">Port OFF  </string>

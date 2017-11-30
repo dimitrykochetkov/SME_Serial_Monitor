@@ -11,4 +11,8 @@ public class SMEAnimator {
         backgroundColorAnimator.setDuration(500);
         backgroundColorAnimator.start();
     }
+
+    public static void animationAlpha(View v, float f1, float f2){
+        ObjectAnimator.ofFloat(v, View.ALPHA, f1, f2).start();
+    }
 }
