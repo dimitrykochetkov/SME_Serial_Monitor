@@ -29,15 +29,15 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.prefs);
 
-            PortUtil.countPorts();
+            PortUtil portUtil = new PortUtil(getActivity());
 
             lpPorts = (ListPreference) findPreference(kPORTS);
             lpBaudrate = (ListPreference) findPreference(kBAUDRATE);
 
             lpBaudrate.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(kBAUDRATE, "38400"));
-            if (PortUtil.ports.length > 1) {
-                lpPorts.setEntries(PortUtil.ports);
-                lpPorts.setEntryValues(PortUtil.ports);
+            if (portUtil.getPorts().length > 1) {
+                lpPorts.setEntries(portUtil.getPorts());
+                lpPorts.setEntryValues(portUtil.getPorts());
             }
             lpPorts.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(kPORTS, getString(R.string.default_port)));
         }

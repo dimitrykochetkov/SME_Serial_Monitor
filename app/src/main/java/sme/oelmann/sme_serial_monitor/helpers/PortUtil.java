@@ -11,23 +11,29 @@ import java.io.OutputStream;
 
 import android_serialport_api.SerialPort;
 import android_serialport_api.SerialPortFinder;
+import sme.oelmann.sme_serial_monitor.R;
 
 public class PortUtil {
     private Context context;
 
-    private static boolean rwAllowed = false;
-    public static String openedPort = "";
-    public static String[] ports;
+    private boolean rwAllowed = false;
+    private String openedPort = "";
+
     private InputStream inputStream;
-    private static OutputStream outputStream;
+    private OutputStream outputStream;
     private ReadThread readThread;
     private SerialPort serialPort;
 
-    public PortUtil(Context _context){
-        context = _context;
+    public PortUtil(Context context){
+        this.context = context;
     }
 
-    public static void countPorts(){
+    public String[] getPorts() { return countPorts(); }
+
+    public String getOpenedPort() { return openedPort; }
+
+    private String[] countPorts(){
+        String[] ports;
         try {
             SerialPortFinder spf = new SerialPortFinder();
             ports = spf.getAllDevicesPath();
@@ -36,6 +42,7 @@ public class PortUtil {
             ports = new String[1];
             ports[0] = "";
         }
+        return ports;
     }
 
     public boolean openPort(String portPath, int baudrate){
@@ -84,7 +91,7 @@ public class PortUtil {
         readThread.start();
     }
 
-    public static void sendBytes(byte[] data){
+    public void sendBytes(byte[] data){
         if (rwAllowed && (outputStream != null)){
             try {
                 outputStream.write(data);
@@ -92,18 +99,6 @@ public class PortUtil {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static void sendIntent(String str, String broadcastTag, Context con){
-        Intent intent = new Intent(broadcastTag);
-        intent.putExtra(broadcastTag, str);
-        LocalBroadcastManager.getInstance(con).sendBroadcast(intent);
-    }
-
-    private String byteToHEXString(byte[] array) {
-        StringBuilder sb = new StringBuilder(array.length*2);
-        for(byte b : array) sb.append(String.format(" %02x", b & 0xff));
-        return sb.toString();
     }
 
     private class ReadThread extends Thread {
@@ -117,14 +112,26 @@ public class PortUtil {
                     byte[] buffer = new byte[256];
                     size = inputStream.read(buffer);
                     if (size > 0) {
-                        String bufferedString = byteToHEXString(buffer);
-                        sendIntent(bufferedString, "HEX", context);
+                        String bufferedString = convert(buffer);
+                        sendIntent(bufferedString, context.getString(R.string.tag), context);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
             }
+        }
+
+        private String convert(byte[] array) {
+            StringBuilder sb = new StringBuilder(array.length*2);
+            for(byte b : array) sb.append(String.format(" %02x", b & 0xff));
+            return sb.toString();
+        }
+
+        private void sendIntent(String str, String broadcastTag, Context context){
+            Intent intent = new Intent(broadcastTag);
+            intent.putExtra(broadcastTag, str);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
     }
 }

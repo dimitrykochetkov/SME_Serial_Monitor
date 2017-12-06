@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -89,17 +88,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         portUtil = new PortUtil(this);
 
-        PortUtil.countPorts();
-
-        if (!PortUtil.ports[0].equals("")){
+        if (!portUtil.getPorts()[0].equals("")){
             boolean mt1exists = false;
-            for (String port : PortUtil.ports){
+            for (String port : portUtil.getPorts()){
                 if (port.equals(getString(R.string.default_port))){
                     mt1exists = true;
                 }
             }
             if (!mt1exists){
-                defaultPort = PortUtil.ports[0];
+                defaultPort = portUtil.getPorts()[0];
             }
             swOn.setEnabled(true);
         } else {
@@ -129,9 +126,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     protected void onResume(){
         super.onResume();
         firstLoad = false;
-        if (PortUtil.openedPort.equals("")){
+        if (portUtil.getOpenedPort().equals("")){
             swOn.setText(getString(R.string.off));
-        } else { swOn.setTextOn(PortUtil.openedPort + " " + getString(R.string.on)); }
+        } else { swOn.setTextOn(portUtil.getOpenedPort() + " " + getString(R.string.on)); }
     }
 
     @Override
@@ -229,14 +226,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void refresh(){
         if (!portIsOpened) {
             portUtil.closePort();
-            if (PortUtil.ports.length > 1) {
+            if (portUtil.getPorts().length > 1) {
                 // get port path and baudrate from memory
                 String portPath = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.kPORTS, defaultPort);
                 int baudrate = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.kBAUDRATE, "38400"));
                 // open port
                 if (portUtil.openPort(portPath, baudrate)) {
                     portIsOpened = true;
-                    String openedPort = PortUtil.openedPort + " " + getString(R.string.on);
+                    String openedPort = portUtil.getOpenedPort() + " " + getString(R.string.on);
                     swOn.setText(openedPort);
                     etIn.setText("");
                     etBlackOut.setText("");
@@ -282,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         if (out.length() > 0) {
             out += '\n';
             byte[] data = out.getBytes();
-            PortUtil.sendBytes(data);
+            portUtil.sendBytes(data);
             out = " < " + out;
             etIn.append(out);
             textSize += out.length();

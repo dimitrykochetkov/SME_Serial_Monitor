@@ -18,4 +18,5 @@
     <string name="access_unavailable">Serial port access unavailable</string>
     <string name="no_ports">no ports</string>
     <string name="default_port">/dev/ttyMT1</string>
+    <string name="tag">HEX</string>
 </resources>
