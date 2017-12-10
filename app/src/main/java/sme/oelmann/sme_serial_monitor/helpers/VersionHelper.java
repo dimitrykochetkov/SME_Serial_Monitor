@@ -36,6 +36,7 @@ public class VersionHelper {
 
     private String getDateFromInt(int date){
         String s = String.valueOf(date);
+        if (s.length() == 7) s = "0" + s;
         return s.substring(0,2) + "." + s.substring(2,4) + "." + s.substring(4);
     }
 }

@@ -11,6 +11,7 @@ import sme.oelmann.sme_serial_monitor.helpers.PortUtil;
 
 public class SettingsActivity extends PreferenceActivity {
 
+    public static final boolean performClick = false;
     public static final String kPORTS = "ports", kBAUDRATE = "comBaudrate";
 
     @Override

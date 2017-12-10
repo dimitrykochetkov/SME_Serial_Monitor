@@ -10,8 +10,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
-        versionName "1.01"
-        buildConfigField "Integer", "BUILD_DATE",  new SimpleDateFormat("ddMMyyyy").format(new Date())
+        versionName "1.01.1"
+        buildConfigField "Integer", "BUILD_DATE",  getDate()
+        project.ext.set("archivesBaseName", "OE_Serial_Monitor_app_" + defaultConfig.versionName)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -30,6 +31,12 @@ android {
             path "CMakeLists.txt"
         }
     }
+}
+
+static def getDate() {
+    String s = new SimpleDateFormat("ddMMyyyy").format(new Date())
+    if (s.startsWith("0")) { s = s.substring(1) }
+    return s
 }
 
 repositories {
