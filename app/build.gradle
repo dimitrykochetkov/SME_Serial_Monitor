@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
-        versionName "1.01.1"
+        versionName "1.01.2"
         buildConfigField "Integer", "BUILD_DATE",  getDate()
         project.ext.set("archivesBaseName", "OE_Serial_Monitor_app_" + defaultConfig.versionName)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

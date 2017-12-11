@@ -29,6 +29,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import sme.oelmann.sme_serial_monitor.helpers.Converter;
 import sme.oelmann.sme_serial_monitor.helpers.PortUtil;
 import sme.oelmann.sme_serial_monitor.helpers.SMEAnimator;
 import sme.oelmann.sme_serial_monitor.helpers.VersionHelper;
@@ -205,24 +206,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         public void onReceive(Context context, Intent intent) {
             String rawString = intent.getStringExtra("HEX");
-            String convertedString = convertHEXStringToASCII(rawString);
-            convertedString = convertedString.replace("\r\n\r\n", "\r\n");
-            convertedString = convertedString.replace("\r\n", "\r\n" + " > ");
-            if (convertedString.startsWith("\r\n")) {
-                convertedString = convertedString.substring("\r\n".length());
-            }
+            String convertedString = Converter.convertHEXStringToASCII(rawString);
+            convertedString = convertedString.replace("\r\n\r\n", "\r\n").replace("\r\n", "\r\n" + " > ");
+            if (convertedString.startsWith("\r\n")) convertedString = convertedString.substring("\r\n".length());
             etIn.append(convertedString + '\n');
             textSize += convertedString.length();
-            if (textSize > 65535){
-                clear();
-            }
+            if (textSize > 65535) clear();
         }
     };
 
-
     private void refresh(){
         if (!portIsOpened) {
-            portUtil.closePort();
             if (portUtil.getPorts().length > 1) {
                 // get port path and baudrate from memory
                 String portPath = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.kPORTS, portUtil.getDefaultPort());
@@ -233,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     String openedPort = portUtil.getOpenedPort() + " " + getString(R.string.on);
                     swOn.setText(openedPort);
                     clear();
-                    send();
                 } else {
                     swOn.setText(R.string.off);
                     swOn.setChecked(false);
@@ -252,22 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
-    private String convertHEXStringToASCII(String hexString){
-        hexString = hexString.replace("00", "");
-        hexString = hexString.replace(" ", "");
-        hexString = hexString.replace("0d0a0d0a","0d0a");
-        if (hexString.endsWith("0d0a")){
-            hexString = hexString.substring(0, hexString.lastIndexOf("0d0a"));
-        }
-        StringBuilder output = new StringBuilder();
-        for (int i = 0; i < hexString.length(); i += 2) {
-            String str = hexString.substring(i, i + 2);
-            try {
-                output.append((char) Integer.parseInt(str, 16));
-            } catch (NumberFormatException nfe) { nfe.printStackTrace(); }
-        }
-        return output.toString();
-    }
+
 
     private void send(){
         String out = etBlackOut.getText().toString();
@@ -278,9 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             out = " < " + out;
             etIn.append(out);
             textSize += out.length();
-            if (textSize > 65535){
-                clear();
-            }
+            if (textSize > 65535) clear();
         }
     }
 
